@@ -8,15 +8,19 @@ export const handler = async(event: any) => {
   const result = await ddb.send(
     new QueryCommand({
       TableName: "Locations",
-      KeyConditionExpression: "pk = :pk",
+      KeyConditionExpression: "locationId = :locationId",
       ExpressionAttributeValues: {
-        ":pk": event.pk || "default-pk"
+        ":locationId": event.locationId || "test_id"
       }
     })
   )
+
+  console.log("Query result:", JSON.stringify(result.Items, null, 2));
 
   return {
     statusCode: 200,
     body: JSON.stringify(result.Items)
   }
 }
+
+handler({}).catch(console.error);
