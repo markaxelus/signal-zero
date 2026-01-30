@@ -2,7 +2,7 @@
 import 'mapbox-gl/dist/mapbox-gl.css';
 import { useMemo } from 'react';
 import Map, { Source, Layer, type LayerProps } from 'react-map-gl/mapbox'
-import type { FeatureCollection } from 'geojson';
+import { useEffect } from 'react';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../lib/db';
 import { fetchLocationsByGeohash } from '../lib/sync';
@@ -23,27 +23,10 @@ const hotspotLayer: LayerProps = {
   }
 };
 
-const perimeterLayer: LayerProps = {
-  id: 'perimeters',
-  type: 'fill',
-  paint: {
-    'fill-color': '#ff4d4d',
-    'fill-opacity': 0.2,
-    'fill-outline-color': '#ff0000'
-  }
-};
 
 export default function MapComponent() {
   const locations = useLiveQuery(() => db.locations.toArray());
-  const handleMapMove = (e: any) => {
-    const { longitude, latitude, zoom } = e.viewState;
-    
-    // Calculate prefix length based on zoom (higher zoom = longer prefix)
-    const precision = zoom > 10 ? 5 : 3; 
-    const prefix = geohash.encode(latitude, longitude).substring(0, precision);
-    
-    fetchLocationsByGeohash(prefix);
-  };
+  
   const geoJson = useMemo(() => {
     return {
       type: 'FeatureCollection' as const,
@@ -54,18 +37,57 @@ export default function MapComponent() {
       }))
     };
   }, [locations]);
+
+
+  useEffect(() => {
+    // 'c' covers most of North America. 
+    fetchLocationsByGeohash('c'); 
+  }, []);
+  const handleMapMove = (e: any) => {
+    const { longitude, latitude, zoom } = e.viewState;
+    // Zoom 3 (World) -> Prefix 'c' (Huge area)
+    // Zoom 12 (Street) -> Prefix 'c2z4v' (Tiny area)
+    const precision = zoom > 10 ? 5 : 3; 
+    const prefix = geohash.encode(latitude, longitude).substring(0, precision);
+    fetchLocationsByGeohash(prefix);
+  };
+
   return (
-    <div style={{ width: '100%', height: '100vh' }}>
+    <div style={{ width: '100%', height: '100vh', position: 'relative' }}>
       <Map
         initialViewState={{ longitude: -123.37, latitude: 48.4, zoom: 3 }}
         onMoveEnd={handleMapMove} // Trigger sync when panning stops
-        mapStyle="https://demotiles.maplibre.org/style.json"
+        mapStyle="mapbox://styles/mapbox/dark-v11"
         mapboxAccessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN}
       >
         <Source id='wildfire-hotspots' type='geojson' data={geoJson}>
           <Layer {...hotspotLayer}/>
         </Source>     
       </Map>
+
+      {/* Hotspot Counter */}
+      <div style={{ 
+        position: 'absolute', 
+        top: 20, 
+        left: 20, 
+        background: 'rgba(15, 15, 15, 0.8)', 
+        backdropFilter: 'blur(8px)',
+        color: 'white', 
+        padding: '12px 20px', 
+        borderRadius: '12px', 
+        zIndex: 10,
+        fontFamily: 'Inter, system-ui, sans-serif',
+        fontSize: '14px',
+        fontWeight: '500',
+        border: '1px solid rgba(255, 255, 255, 0.1)',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.3)',
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px'
+      }}>
+        <span style={{ color: '#ff4d4d' }}>●</span>
+        <span>Local Hotspots: <b>{locations?.length || 0} / 22,000 discovered</b></span>
+      </div>
     </div>
   );
 }
