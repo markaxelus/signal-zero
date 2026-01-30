@@ -13,7 +13,7 @@ export async function syncOfflineData() {
 
   for (const item of pending) {
     try {
-      await fetch ('/SETUP API LAMBDA SERVERLESS PROB', {
+      await fetch ('https://f2gv5gg3jf.execute-api.us-east-1.amazonaws.com/sync', {
         method: 'POST',
         body: JSON.stringify(item)
       });
