@@ -1,4 +1,4 @@
-import { db } from "./db";
+import { db, type WildfireLocation } from "./db";
 
 const API_URL = 'https://f2gv5gg3jf.execute-api.us-east-1.amazonaws.com';
 
@@ -12,9 +12,9 @@ export async function fetchLocationsByGeohash(prefix:string) {
     const locations = await response.json();
 
     if(Array.isArray(locations)){
-      await db.locations.bulkPut(locations.map((loc: any) => ({
+      await db.locations.bulkPut(locations.map((loc: Omit<WildfireLocation, 'id' | 'syncStatus'>) => ({
         ...loc,
-        syncStatus: 'synced'
+        syncStatus: 'synced' as const
       })))
       console.log(`Pull completed: Synced ${locations.length} NASA items for area ${prefix}`);
     } else {
@@ -53,7 +53,7 @@ export async function syncOfflineData() {
       await db.locations.update(item.id!, {
         syncStatus: 'synced'
       });
-    } catch (err) {
+    } catch (_err) {
       console.error(`Sync failed for ${item}`, item.locationId);
     }
   }

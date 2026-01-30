@@ -9,8 +9,6 @@ import { fetchLocationsByGeohash } from '../lib/sync';
 import geohash from 'ngeohash';
 
 
-const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
-
 const hotspotLayer: LayerProps = {
   id: 'hotspot',
   type: 'circle',
@@ -43,7 +41,7 @@ export default function MapComponent() {
     // 'c' covers most of North America. 
     fetchLocationsByGeohash('c'); 
   }, []);
-  const handleMapMove = (e: any) => {
+  const handleMapMove = (e: { viewState: { longitude: number; latitude: number; zoom: number } }) => {
     const { longitude, latitude, zoom } = e.viewState;
     // Zoom 3 (World) -> Prefix 'c' (Huge area)
     // Zoom 12 (Street) -> Prefix 'c2z4v' (Tiny area)
