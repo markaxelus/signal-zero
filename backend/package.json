@@ -5,7 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "node src/seed.ts"
+    "seed": "node src/seed.ts",
+    "report": "node src/spatial-report.ts",
+    "dev": "npm run report"
   },
   "keywords": [],
   "author": "",
