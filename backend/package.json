@@ -19,6 +19,7 @@
     "ngeohash": "^0.6.3"
   },
   "devDependencies": {
+    "@types/ngeohash": "^0.6.8",
     "@types/node": "^25.1.0",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
