@@ -20,11 +20,12 @@ export const handler = async(event: any) => {
     })
   )
 
-  console.log("Query result:", JSON.stringify(result.Items, null, 2));
-
   return {
     statusCode: 200,
-    headers: { "Access-Control-Allow-Origin": "*" },
+    headers: { 
+      "Access-Control-Allow-Origin": "*",
+      "Content-Type": "application/json"
+    },
     body: JSON.stringify(result.Items)
   }
 }
