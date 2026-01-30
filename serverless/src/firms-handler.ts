@@ -1,4 +1,5 @@
-import { DynamoDBClient, PutRequest$ } from "@aws-sdk/client-dynamodb";
+import 'dotenv/config';
+import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocumentClient, BatchWriteCommand } from "@aws-sdk/lib-dynamodb";
 import geohash from 'ngeohash';
 
@@ -17,7 +18,7 @@ export const ingestFirms = async() => {
   
   const csvData = await response.text();
   const lines = csvData.trim().split('\n').slice(1);
-  console.log(`Processign ${lines.length} hotspots`);
+  console.log(`Processing ${lines.length} hotspots`);
 
   const requests = lines.map((line, i) => {
     const col = line.split(',');
@@ -29,8 +30,9 @@ export const ingestFirms = async() => {
 
     return {
       PutRequest: {
-        Item : {
-          locationId: `firms_${date}_${time}${i}`,
+        Item: {
+          // Deterministic ID based on event data to prevent duplicates
+          locationId: `firms_${latitude.toFixed(3)}_${longitude.toFixed(3)}`,
           latitude,
           longitude,
           geohash: geohash.encode(latitude, longitude),
@@ -53,9 +55,12 @@ export const ingestFirms = async() => {
     }))
   }
 
+  console.log(`Finished processing ${lines.length} data`)
   return {
     statusCode: 200,
     body: JSON.stringify({ message: "Success", count: requests.length })
   }
 
 }
+
+ingestFirms().catch(console.error)

@@ -8,14 +8,14 @@ provider:
   environment:
     FIRMS_KEY: ${env:FIRMS_KEY}
 
-  iam:
-    role:
-      statements:
-        - Effect: Allow
-          Action:
-            - dynamodb:PutItem
-            - dynamodb:Query
-          Resource: "arn:aws:dynamodb:us-east-1:*:table/Locations"
+iam:
+  role:
+    statements:
+      - Effect: Allow
+        Action:
+          - dynamodb:PutItem
+          - dynamodb:Query
+        Resource: "arn:aws:dynamodb:us-east-1:*:table/Locations"
 
 functions:
   syncReports:
@@ -24,3 +24,6 @@ functions:
       - httpApi:
           path: /sync
           method: post
+
+  ingestFirms:
+    handler: src/firms-handler.ingestFirms
