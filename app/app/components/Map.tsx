@@ -3,6 +3,8 @@ import 'mapbox-gl/dist/mapbox-gl.css';
 import { useMemo } from 'react';
 import Map, { Source, Layer, type LayerProps } from 'react-map-gl/mapbox'
 import type { FeatureCollection } from 'geojson';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { db } from '../lib/db';
 
 const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN
 
@@ -29,24 +31,28 @@ const perimeterLayer: LayerProps = {
 };
 
 export default function MapComponent() {
+  const locations = useLiveQuery(() => db.locations.toArray());
+
   const geoJson = useMemo((): FeatureCollection => {
-    const points = Array.from({ length: 10000 }).map((_, i) => ({
+    const features = (locations || []).map((loc) => ({
       type: 'Feature' as const,
       geometry: {
         type: 'Point' as const,
-        coordinates: [
-          -123.37 + (Math.random() - 0.5) * 5,
-          48.4 + (Math.random() - 0.5) * 5
-        ]
+        coordinates: [loc.longitude, loc.latitude]
       },
-      properties: { id: i }
+      properties: { 
+        id: loc.id,
+        locationId: loc.locationId,
+        type: loc.type,
+        syncStatus: loc.syncStatus
+      }
     }));
 
     return {
       type: 'FeatureCollection' as const,
-      features: points
+      features
     }
-  }, []);
+  }, [locations]);
 
   const perimeterGeoJson = useMemo((): FeatureCollection => {
     const perimeters = Array.from({ length: 50 }).map((_, i) => {
