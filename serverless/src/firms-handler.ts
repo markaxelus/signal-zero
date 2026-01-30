@@ -20,19 +20,22 @@ export const ingestFirms = async() => {
   const lines = csvData.trim().split('\n').slice(1);
   console.log(`Processing ${lines.length} hotspots`);
 
-  const requests = lines.map((line, i) => {
+  const uniqueRequests = new Map();
+
+  lines.forEach((line, i) => {
     const col = line.split(',');
     const latitude = parseFloat(col[0]);
     const longitude = parseFloat(col[1]);
     const date = col[5];
     const time = col[6];
-    const conf = col[10];
+    const conf = col[10]; 
 
-    return {
+    const locationId = `firms_${latitude.toFixed(3)}_${longitude.toFixed(3)}`;
+
+    uniqueRequests.set(locationId, {
       PutRequest: {
         Item: {
-          // Deterministic ID based on event data to prevent duplicates
-          locationId: `firms_${latitude.toFixed(3)}_${longitude.toFixed(3)}`,
+          locationId,
           latitude,
           longitude,
           geohash: geohash.encode(latitude, longitude),
@@ -42,8 +45,11 @@ export const ingestFirms = async() => {
           createdAt: new Date().toISOString()
         }
       }
-    }
+    });
   });
+
+  const requests = Array.from(uniqueRequests.values());
+  console.log(`Deduplicated to ${requests.length} unique hotspots`);
 
   // DynamoDB Batch Write limit 25 items
   for (let i = 0; i < requests.length; i+=25) {
