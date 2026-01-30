@@ -5,6 +5,8 @@ const client = new DynamoDBClient({ region: "us-east-1" });
 const ddb = DynamoDBDocumentClient.from(client);
 
 export const handler = async(event: any) => {
+  const prefix = event.queryStringParameters?.prefix || "";
+  
   const result = await ddb.send(
     new QueryCommand({
       TableName: "Locations",
@@ -13,7 +15,7 @@ export const handler = async(event: any) => {
       ExpressionAttributeNames: { "#type": "type" },
       ExpressionAttributeValues: { 
         ":type": "REAL", 
-        ":prefix": "prefix" 
+        ":prefix": prefix 
       }
     })
   )
