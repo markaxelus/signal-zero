@@ -8,7 +8,8 @@
     "seed": "node src/seed.ts",
     "report": "node src/spatial-report.ts",
     "geo": "node src/geo-report.ts",
-    "dev": "npm run report && npm run geo"
+    "dev": "npm run report && npm run geo",
+    "deploy": "serverless deploy"
   },
   "keywords": [],
   "author": "",
@@ -17,7 +18,8 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.978.0",
     "@aws-sdk/lib-dynamodb": "^3.978.0",
-    "ngeohash": "^0.6.3"
+    "ngeohash": "^0.6.3",
+    "serverless": "^4.31.2"
   },
   "devDependencies": {
     "@types/ngeohash": "^0.6.8",

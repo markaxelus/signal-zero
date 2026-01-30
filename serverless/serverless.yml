@@ -22,6 +22,3 @@ functions:
       - httpApi:
           path: /sync
           method: post
-
-plugins:
-  - serverless-esbuild
