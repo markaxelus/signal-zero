@@ -5,6 +5,8 @@ provider:
   runtime: nodejs20.x
   region: us-east-1
   stage: dev
+  environment:
+    FIRMS_KEY: ${env:FIRMS_KEY}
 
   iam:
     role:
