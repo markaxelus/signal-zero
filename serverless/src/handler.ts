@@ -6,7 +6,7 @@ const ddb = DynamoDBDocumentClient.from(client);
 
 export const handler = async(event: any) => {
   const prefix = event.queryStringParameters?.prefix || "";
-  
+
   const result = await ddb.send(
     new QueryCommand({
       TableName: "Locations",
@@ -29,4 +29,3 @@ export const handler = async(event: any) => {
   }
 }
 
-handler({}).catch(console.error);
