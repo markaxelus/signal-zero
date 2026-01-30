@@ -1,0 +1,27 @@
+service: signal-zero-backend
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+  stage: dev
+
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:Query
+          Resource: "arn:aws:dynamodb:us-east-1:*:table/Locations"
+
+functions:
+  syncReports:
+    handler: src/sync-handler.handler
+    events:
+      - httpApi:
+          path: /sync
+          method: post
+
+plugins:
+  - serverless-esbuild

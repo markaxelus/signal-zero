@@ -8,9 +8,12 @@ export const handler = async(event: any) => {
   const result = await ddb.send(
     new QueryCommand({
       TableName: "Locations",
-      KeyConditionExpression: "locationId = :locationId",
-      ExpressionAttributeValues: {
-        ":locationId": event.locationId || "test_id"
+      IndexName: "geohash-index",
+      KeyConditionExpression: "#type = :type AND begins_with(geohash, :prefix)",
+      ExpressionAttributeNames: { "#type": "type" },
+      ExpressionAttributeValues: { 
+        ":type": "REAL", 
+        ":prefix": "prefix" 
       }
     })
   )
@@ -19,6 +22,7 @@ export const handler = async(event: any) => {
 
   return {
     statusCode: 200,
+    headers: { "Access-Control-Allow-Origin": "*" },
     body: JSON.stringify(result.Items)
   }
 }
