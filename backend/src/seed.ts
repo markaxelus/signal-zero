@@ -12,7 +12,7 @@ async function seed() {
       locationId: "test_id",
       latitude: 50.4284,
       longitude: -126.3656,
-      geohash: geohash.encode(48.4284, -123.3656),
+      geohash: geohash.encode(50.4284, -126.3656),
       title: "Downtown Coffee",
       category: "Restaurant",
       type: "REAL"
