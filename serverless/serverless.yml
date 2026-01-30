@@ -17,7 +17,7 @@ provider:
 
 functions:
   syncReports:
-    handler: src/sync-handler.handler
+    handler: src/sync-handler.syncHandler
     events:
       - httpApi:
           path: /sync
