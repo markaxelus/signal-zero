@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "seed": "node src/seed.ts",
     "report": "node src/spatial-report.ts",
-    "dev": "npm run report"
+    "geo": "node src/geo-report.ts",
+    "dev": "npm run report && npm run geo"
   },
   "keywords": [],
   "author": "",
