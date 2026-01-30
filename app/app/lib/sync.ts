@@ -1,6 +1,7 @@
 import { db } from "./db";
 
 const API_URL = 'https://f2gv5gg3jf.execute-api.us-east-1.amazonaws.com';
+
 /**
  * PULL: Fetches NASA hotspots from DynamoDB for a specific spatial area (geohash)
  * and saves them to the local Dexie database.
@@ -10,11 +11,15 @@ export async function fetchLocationsByGeohash(prefix:string) {
     const response =  await fetch(`${API_URL}/query?prefix=${prefix}`);
     const locations = await response.json();
 
-    await db.locations.bulkPut(locations.map((loc: any) => ({
-      ...loc,
-      syncStatus: 'synced'
-    })))
-    console.log(`Pull completed: Synced ${locations.length} NASA items for area ${prefix}`);
+    if(Array.isArray(locations)){
+      await db.locations.bulkPut(locations.map((loc: any) => ({
+        ...loc,
+        syncStatus: 'synced'
+      })))
+      console.log(`Pull completed: Synced ${locations.length} NASA items for area ${prefix}`);
+    } else {
+      console.error("Server response was not an array:", locations);
+    }
   } catch (err) {
     console.error("Failed to fetch spatial data from server", err);
   }

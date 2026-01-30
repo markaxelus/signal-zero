@@ -7,15 +7,21 @@ provider:
   stage: dev
   environment:
     FIRMS_KEY: ${env:FIRMS_KEY}
+  httpApi:
+    cors: true
 
-iam:
-  role:
-    statements:
-      - Effect: Allow
-        Action:
-          - dynamodb:PutItem
-          - dynamodb:Query
-        Resource: "arn:aws:dynamodb:us-east-1:*:table/Locations"
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:PutItem
+            - dynamodb:Query
+            - dynamodb:BatchWriteItem
+          Resource: 
+            - "arn:aws:dynamodb:us-east-1:*:table/Locations"
+            - "arn:aws:dynamodb:us-east-1:*:table/Locations/index/*"
+
 
 functions:
   syncReports:
@@ -24,6 +30,13 @@ functions:
       - httpApi:
           path: /sync
           method: post
+
+  queryArea:
+    handler: src/handler.handler
+    events:
+      - httpApi:
+          path: /query
+          method: get
 
   ingestFirms:
     handler: src/firms-handler.ingestFirms

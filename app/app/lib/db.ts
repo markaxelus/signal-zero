@@ -6,6 +6,7 @@ export interface WildfireLocation {
   latitude: number;
   longitude: number;
   type: 'REAL' | 'NOISE';
+  confidence: string;
   syncStatus: 'synced' | 'pending';
 }
 
