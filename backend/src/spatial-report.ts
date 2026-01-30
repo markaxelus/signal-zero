@@ -6,12 +6,9 @@ const ddb = DynamoDBDocumentClient.from(client);
 
 async function runSpatialReport() {
   // Center: Victoria, BC
-  const userLat = 48.4284;
-  const userLng = -123.3656;
+  const userLat = 50.4284;
+  const userLng = -126.3656;
   const offset = 0.5; // Approx 50km
-
-  console.log("\nATTEMPTING SPATIAL QUERY USING SCAN + FILTER...");
-  console.log(`Searching near: ${userLat}, ${userLng} (±${offset}°)`);
 
   const startTime = Date.now();
 
