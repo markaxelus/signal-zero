@@ -3,6 +3,10 @@
 **Offline-first wildfire mapping for remote field operations**
 
 
+https://github.com/user-attachments/assets/1dc0ce3d-b654-4023-9993-ab6b0939d5da
+
+
+
 ## Overview
 
 signal-zero is a spatial surveillance tool built to solve a critical problem: **wildfire response teams operate in areas where cellular service is unreliable or nonexistent.** Standard mapping tools fail when the network drops, leaving crews without access to critical spatial data.
@@ -83,4 +87,5 @@ Geohash approach: Geohash prefix queries on DynamoDB GSI (100% efficiency)
 
 
 **Built with** 🔥 **for the frontlines**
+
 
