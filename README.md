@@ -26,6 +26,9 @@ Topics covered:
 - Solving DynamoDB write throttling at scale
 - Building robust offline-first data sync
 - Testing WebGL maps in CI/CD pipelines
+
+<img width="827" height="882" alt="image" src="https://github.com/user-attachments/assets/cf326664-0ba0-4985-8f95-8b84a8f1872c" />
+
 ## Tech Stack
 
 **Frontend**
@@ -87,5 +90,6 @@ Geohash approach: Geohash prefix queries on DynamoDB GSI (100% efficiency)
 
 
 **Built with** 🔥 **for the frontlines**
+
 
 
