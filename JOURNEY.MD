@@ -23,6 +23,13 @@ It was scanning all the tables since it needs to retrieve both the _lat_ and _lo
 - Location was stored as raw `latitude` / `longitude`
 - Queries required **scanning every item**
 
+![geohash](images/geohash-report.png)
+![spatial](images/spatial-report.png)
+
+> Note: Geohash also took 300ms because the calls were made locally instead of AWS Lambda. However the effieciency shows that it is ready to scale
+Scan: 50ms processing + 300ms network = ~350ms
+Query: 5ms processing + 300ms network = ~305ms
+
 ### The Pivot: Geohashing
 I looked for ways to go around this since we need 2 different types of data and how to effectively query them in the geospatial field.
 I found that its best to stop treating location as two numbers and instead implemented **Geohashing**.
@@ -36,6 +43,8 @@ I found that its best to stop treating location as two numbers and instead imple
 ### The Result
 - Query times dropped from **seconds → sub-100ms**
 - Performance remained stable as the dataset grew even with **~22,000 points** 
+
+![dynamodb](images/dynamodb.png)
 
 ---
 
@@ -68,6 +77,8 @@ Even after ingestion succeeded, the map was still blank.
 I was only able to find the root cause of this because CloudWatch logs exposed a silent AccessDeniedException tied specifically to the GSI ARN.
 That was the moment it clicked: DynamoDB treats GSIs as separate resources for IAM, even though they feel like part of the table.
 
+![hotspots](images/hotspots.png)
+
 ---
 
 ### Phase 2.5: Data Deduplication (Why 22K → 7.2K)
@@ -95,12 +106,14 @@ Moved away from a purely online model and adopted an **offline-first design** si
 ### The Offline Workflow
 The app now:
 
-- Caches **22,000+ fire records locally**
+- Caches **7,249+ fire records locally**
 - Allows users to:
   - Pan the map
   - Query hotspots
   - Click-to-report new fires  
 - Works **fully offline**
+
+![offline](images/offline-db.png)
 
 ### The Sync Mechanism
 A background **service worker** handles recovery:
@@ -116,7 +129,7 @@ A background **service worker** handles recovery:
 We needed safe, repeatable deployments (under time constraint).
 
 ### The Testing Problem
-Used **Cypress smoke testing**—and immediately failed.
+Used **Cypress smoke testing,**and immediately failed.
 
 - WebGL maps (Mapbox) render **non-deterministically**
 - Pixel-based assertions are unreliable in headless CI

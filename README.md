@@ -68,8 +68,10 @@ Topics covered:
 
 **Geospatial Indexing**
 ```
-Standard approach: Scan entire table for lat/lon matches (300ms+)
-Geohash approach: Geohash prefix queries on DynamoDB GSI (<100ms)
+Standard approach: Scan entire table for lat/lon matches (0.01% efficiency)
+Geohash approach: Geohash prefix queries on DynamoDB GSI (100% efficiency)
+![geohash](images/geohash-report.png)
+![spatial](images/spatial-report.png)
 ```
 
 **Offline Sync Pattern**
