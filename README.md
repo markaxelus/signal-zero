@@ -67,20 +67,20 @@ Topics covered:
 ## Architecture Highlights
 
 **Geospatial Indexing**
-```
-Standard approach: Scan entire table for lat/lon matches (0.01% efficiency)
-Geohash approach: Geohash prefix queries on DynamoDB GSI (100% efficiency)
+
+Standard approach: Scan entire table for lat/lon matches (0.01% efficiency)      
+Geohash approach: Geohash prefix queries on DynamoDB GSI (100% efficiency)      
 ![geohash](images/geohash-report.png)
 ![spatial](images/spatial-report.png)
-```
+
 
 **Offline Sync Pattern**
-```
+
 1. User operates offline → writes to IndexedDB
 2. Service Worker heartbeats network status
 3. Connection detected → batch sync to AWS Lambda
 4. Lambda updates DynamoDB → frontend reflects changes
-```
 
 
 **Built with** 🔥 **for the frontlines**
+
