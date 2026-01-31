@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "signal-zero",
   description: "Offline GIS",
+  manifest: "/manifest.json",
 };
 
 export default function RootLayout({
