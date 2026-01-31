@@ -70,6 +70,20 @@ That was the moment it clicked: DynamoDB treats GSIs as separate resources for I
 
 ---
 
+### Phase 2.5: Data Deduplication (Why 22K → 7.2K)
+
+The reason only **~7.2K items** appear instead of the full **22K** is intentional deduplication during ingestion.
+
+The ingestion script groups fire hotspots that are within roughly ~100 meters of each other using this logic:
+
+const locationId = `firms_${latitude.toFixed(3)}_${longitude.toFixed(3)}`;
+
+Rounding coordinates to 3 decimal places **merges nearby hotspots into a single logical location**. This prevents overlapping markers on the map and reduces storage and query load.
+
+This is especially common for large fires where multiple satellite detections cluster tightly together.
+
+---
+
 ## Phase 3: Offline Workflow
 
 ### The Architecture Shift
