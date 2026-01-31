@@ -15,7 +15,7 @@ After researching Hummingbird Drones' wildfire operations in BC, I wanted to und
 
 ## Technical Deep-Dive
 
-For a detailed breakdown of the engineering challenges and solutions, see [JOURNEY.md](./JOURNEY.md).
+For a detailed breakdown of the engineering challenges and solutions, see [JOURNEY.MD](./JOURNEY.MD).
 
 Topics covered:
 - Breaking spatial blindness in NoSQL databases

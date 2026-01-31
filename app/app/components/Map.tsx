@@ -84,7 +84,7 @@ export default function MapComponent() {
         gap: '8px'
       }}>
         <span style={{ color: '#ff4d4d' }}>●</span>
-        <span>Local Hotspots: <b>{locations?.length || 0} / 22,000 discovered</b></span>
+        <span>Local Hotspots: <b>{locations?.length || 0} / 7,249 discovered</b></span>
       </div>
     </div>
   );
